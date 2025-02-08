@@ -1,0 +1,22 @@
+{
+  "name": "pw",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test:all": "npx playwright test --grep @regression",
+    "test:smoke": "npx playwright test --grep @smoke",
+    "test:api": "npx playwright test api-tests.spec.ts --project=chromium",
+    "test:all_debug": "npx playwright test --debug --project=chromium"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.5",
+    "allure-commandline": "^2.32.0",
+    "allure-playwright": "^3.0.9",
+    "dotenv": "^16.4.7"
+  }
+}
