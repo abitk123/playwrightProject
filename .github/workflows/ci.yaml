@@ -9,9 +9,49 @@ on:
       - main
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-keys.outputs.key }}
     
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Cache node modules
+      uses: actions/cache@v2
+      id: node-cache
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies and Playwright with Allure
+      if: steps.node-cache.outputs.cache-hit != 'true'
+      run: |
+        npm install
+        npm install --save-dev @playwright/test allure-playwright allure-commandline
+        npx playwright install --with-deps
+
+    - name: Cache Playwright browsers
+      uses: actions/cache@v2
+      id: playwright-cache
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
 
@@ -19,21 +59,26 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '18'
-        cache: 'npm'
 
-    - name: Install dependencies and Playwright with Allure
+    - name: Restore node modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ needs.setup.outputs.cache-key }}
+
+    - name: Restore Playwright browsers
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ needs.setup.outputs.cache-key }}
+
+    - name: Run tests based on event
       run: |
-        npm install
-        npm install --save-dev @playwright/test allure-playwright allure-commandline
-        npx playwright install --with-deps
-
-    - name: Run smoke tests
-      if: github.event_name == 'push'
-      run: npm run test:smoke
-
-    - name: Run regression tests
-      if: github.event_name == 'pull_request'
-      run: npm run test:all
+        if [ "${{ github.event_name }}" == "push" ]; then
+          npm run test:smoke
+        elif [ "${{ github.event_name }}" == "pull_request" ]; then
+          npm run test:all
+        fi
 
     - name: Generate Allure report
       run: npx allure generate allure-results --clean
