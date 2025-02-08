@@ -12,6 +12,9 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     
+    outputs:
+      cache-key: ${{ steps.cache-keys.outputs.key }}
+
     steps:
     - uses: actions/checkout@v2
 
@@ -34,10 +37,13 @@ jobs:
           ~/.npm
           ~/.cache/ms-playwright
         key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-deps-
 
   test:
     needs: setup
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v2
 
@@ -46,7 +52,7 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Restore dependencies from cache
+    - name: Restore node modules and Playwright browsers
       uses: actions/cache@v4
       with:
         path: |
@@ -68,5 +74,4 @@ jobs:
     - name: Upload Allure report as an artifact
       uses: actions/upload-artifact@v4
       with:
-        name: allure-report
-        path: allure-report/
+        n
