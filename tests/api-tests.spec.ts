@@ -1,19 +1,24 @@
 import { expect, request, APIRequestContext } from "@playwright/test";
-import { generateRandomUsername } from "../utils/randomizer";
+import { generateRandomUsername } from "../helpers/randomizer";
 import { test } from "../test-fixtures";
+import { Assert } from "../helpers/asserts";
 
-test.describe("API requests with Playwright @smoke", () => {
+import { ApiClient } from "../helpers/apiClient";
+
+test.describe("API suite @smoke @regression", () => {
   let apiContext: APIRequestContext;
-  let url = process.env.URL_API || '/';
-
+  let url = process.env.URL_API || "/";
+  let apiClient: ApiClient;
+  let assert = new Assert();
+  let randomUsername: string;
 
   test.beforeAll(async () => {
     apiContext = await request.newContext();
-    
+    apiClient = new ApiClient(apiContext, url);
+    randomUsername = generateRandomUsername("UsernameTest");
   });
 
-  test("POST Request to create user", async () => {
-    const randomUsername = generateRandomUsername("UsernameTest");  
+  test("Create user - success", async () => {
     const requestBody = {
       user: {
         email: `${randomUsername}@mail.com`,
@@ -22,26 +27,68 @@ test.describe("API requests with Playwright @smoke", () => {
       },
     };
 
-    const response = await apiContext.post(
-      `${url}/users`,
-      {
-        data: requestBody,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+    let response = await apiClient.createUser(
+      requestBody.user.email,
+      requestBody.user.password,
+      requestBody.user.username
     );
-
-    expect(response.status()).toBe(201);
-    const responseBody = await response.json();
-    expect(responseBody.user.username).toBe(randomUsername);
-    expect(responseBody.user).toHaveProperty('token');
-   
+    await assert.assertSuccessfulUserCreation(response, randomUsername);
   });
 
+  test("Create user - empty password", async () => {
+    
+    const requestBody = {
+      user: {
+        email: `${randomUsername}@mail.com`,
+        password: "",
+        username: randomUsername,
+      },
+    };
 
-  test("Login with API", async ({loginData}) => {
+    let response = await apiClient.createUser(
+      requestBody.user.email,
+      requestBody.user.password,
+      requestBody.user.username
+    );
+    await assert.assertUnSuccessfulUserCreation(response, "password", "can't be blank");
 
+  });
+
+  test("Create user - empty name", async () => {
+    const requestBody = {
+      user: {
+        email: `${randomUsername}@mail.com`,
+        password: "pass123",
+        username: "",
+      },
+    };
+
+    let response = await apiClient.createUser(
+      requestBody.user.email,
+      requestBody.user.password,
+      requestBody.user.username
+    );
+    await assert.assertUnSuccessfulUserCreation(response, "username", "can't be blank");
+  });
+
+  test("Create user - empty email", async () => {
+    const requestBody = {
+      user: {
+        email: ``,
+        password: "pass123",
+        username: randomUsername,
+      },
+    };
+
+    let response = await apiClient.createUser(
+      requestBody.user.email,
+      requestBody.user.password,
+      requestBody.user.username
+    );
+    await assert.assertUnSuccessfulUserCreation(response, "email", "can't be blank");
+  });
+
+  test("Login - success", async ({ loginData }) => {
     const requestBody = {
       user: {
         email: loginData.email,
@@ -49,20 +96,10 @@ test.describe("API requests with Playwright @smoke", () => {
       },
     };
 
-    const response = await apiContext.post(
-      `${url}/users/login`,
-      {
-        data: requestBody,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+    let response = await apiClient.loginUser(
+      requestBody.user.email,
+      requestBody.user.password
     );
-    expect(response.status()).toBe(200);
-    const responseBody = await response.json();
-    expect(responseBody.user.username).toBe(loginData.username);
-    expect(responseBody.user.email).toBe(loginData.email);
-    expect(responseBody.user).toHaveProperty('token');
-   
+    await assert.assertSuccessfulLogin(response, loginData.username, loginData.email);
   });
-})
+});

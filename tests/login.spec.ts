@@ -26,10 +26,7 @@ test.describe("Login suite", () => {
     loginData,
   }) => {
     await pm.gotoPage("Sign up");
-    await page.getByText("Have an account?").click();
-    const title = page.getByText("Need an account?");
-
-    expect(title).toBeVisible();
+    await pm.goToLoginPage();
     await pm.login(loginData.email, loginData.password);
 
     await expect(

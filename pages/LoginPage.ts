@@ -9,4 +9,10 @@ export class LoginPage {
     await this.page.getByRole("button", { name: "Sign in" }).click();
   }
 
+  async gotoRegistrationPage(): Promise<void> {
+    await this.page.getByText("Need an account?").click();
+  }
+  
+  
+
 }
