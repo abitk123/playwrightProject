@@ -14,4 +14,9 @@ export class RegistrationPage {
     await expect(signUpButton).toBeEnabled();
     await this.page.getByRole("button", { name: "Sign up" }).click();
   }
+
+  async goToLoginPage(): Promise<void> {
+    await this.page.getByText("Have an account?").click();
+  }
+
 }

@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { generateRandomUsername } from "../utils/randomizer";
+import { generateRandomUsername } from "../helpers/randomizer";
 import { PageManager } from "../pages/PageManager";
 import { test } from "../test-fixtures";
 
@@ -29,7 +29,7 @@ test.describe("Registration suite", () => {
     const randomUsername = generateRandomUsername("UsernameTest");
 
     await pm.gotoPage("Sign in");
-    await page.getByText("Need an account?").click();
+    await pm.gotoRegistrationPage();
     await pm.register(
       randomUsername,
       `${randomUsername}@gmail.com`,

@@ -6,8 +6,8 @@ export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 3,
+  retries: process.env.CI ? 2 : 1,
+  workers: process.env.CI ? 3 : 3,
   reporter: [["list"], ["allure-playwright"], ["html"]],
   use: {
     headless: true,

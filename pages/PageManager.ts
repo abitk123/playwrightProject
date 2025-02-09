@@ -28,4 +28,12 @@ export class PageManager {
     return this.mainPage.gotoPage(locator);
   }
 
+  async gotoRegistrationPage() {
+    await this.loginPage.gotoRegistrationPage();
+  }
+
+  async goToLoginPage() {
+    await this.registrationPage.goToLoginPage();
+  }
+
 }
