@@ -38,7 +38,7 @@ test.describe("API suite @smoke @regression", () => {
     await assert.assertSuccessfulUserCreation(response, randomUsername);
   });
 
-  test("Create user - empty password", async () => {
+  test("Create user - empty password @smoke @regression", async () => {
     
     const requestBody = {
       user: {
@@ -53,11 +53,11 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password,
       requestBody.user.username
     );
-    await assert.assertUnSuccessfulUserCreation(response, "password", "can't be blank");
+    await assert.assertUnsuccessfulUserCreation(response, "password", "can't be blank");
 
   });
 
-  test("Create user - empty name", async () => {
+  test("Create user - empty name @regression", async () => {
     const requestBody = {
       user: {
         email: `${randomUsername}@mail.com`,
@@ -71,10 +71,10 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password,
       requestBody.user.username
     );
-    await assert.assertUnSuccessfulUserCreation(response, "username", "can't be blank");
+    await assert.assertUnsuccessfulUserCreation(response, "username", "can't be blank");
   });
 
-  test("Create user - empty email", async () => {
+  test("Create user - empty email @regression", async () => {
     const requestBody = {
       user: {
         email: ``,
@@ -88,10 +88,10 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password,
       requestBody.user.username
     );
-    await assert.assertUnSuccessfulUserCreation(response, "email", "can't be blank");
+    await assert.assertUnsuccessfulUserCreation(response, "email", "can't be blank");
   });
 
-  test("Login - success", async ({ loginData }) => {
+  test("Login - success @smoke @regression @smoke", async ({ loginData }) => {
     const requestBody = {
       user: {
         email: loginData.email,
@@ -104,5 +104,35 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password
     );
     await assert.assertSuccessfulLogin(response, loginData.username, loginData.email);
+  });
+
+  test("Login - invalid password @regression", async ({ loginData }) => {
+    const requestBody = {
+      user: {
+        email: loginData.email,
+        password: "invalidPassword",
+      },
+    };
+
+    let response = await apiClient.loginUser(
+      requestBody.user.email,
+      requestBody.user.password
+    );
+    await assert.assertUnsuccessfulLogin(response, "email or password",  "is invalid");
+  });
+
+  test("Login - unregistered user @regression @smoke", async ({ loginData }) => {
+    const requestBody = {
+      user: {
+        email: `${randomUsername}@mail.com`,
+        password: "pass123!"
+      },
+    };
+
+    let response = await apiClient.loginUser(
+      requestBody.user.email,
+      requestBody.user.password
+    );
+    await assert.assertUnsuccessfulLogin(response, "email or password",  "is invalid");
   });
 });
