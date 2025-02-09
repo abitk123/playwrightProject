@@ -5,6 +5,7 @@ import article from "../data/article.json";
 import { Assert } from "../helpers/asserts";
 import { faker } from "@faker-js/faker";
 
+
 test.describe("Login suite", () => {
   let pm: PageManager;
   let assert = new Assert();
