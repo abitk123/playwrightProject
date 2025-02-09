@@ -1,6 +1,8 @@
 import { expect } from "@playwright/test";
 import { PageManager } from "../pages/PageManager";
 import { test } from "../test-fixtures";
+import dotenv from "dotenv";
+dotenv.config();
 
 test.describe("Login suite", () => {
   let pm: PageManager;
