@@ -26,6 +26,7 @@ jobs:
         npm install
         npm install --save-dev @playwright/test allure-playwright allure-commandline
         npx playwright install --with-deps
+        npm install dotenv
 
     - name: Run smoke tests
       if: github.event_name == 'push'

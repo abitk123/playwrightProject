@@ -3,6 +3,9 @@ import { generateRandomUsername } from "../helpers/randomizer";
 import { test } from "../test-fixtures";
 import { Assert } from "../helpers/asserts";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 import { ApiClient } from "../helpers/apiClient";
 
 test.describe("API suite @smoke @regression", () => {
