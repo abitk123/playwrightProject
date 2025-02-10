@@ -13,6 +13,7 @@ test.describe("Login suite", () => {
     pm = new PageManager(page);
   });
 
+
   test("Successful login and logout @regression @smoke", async ({
     page,
     loginData,
@@ -24,9 +25,11 @@ test.describe("Login suite", () => {
       page.getByRole("link", { name: loginData.username })
     ).toBeVisible();
 
+
     await pm.gotoPage("Settings");
     await pm.logout();
     await assert.assertLogout(page);
+
   });
 
   test("Login through the registration page and logout @regression", async ({
@@ -43,6 +46,7 @@ test.describe("Login suite", () => {
     await pm.gotoPage("Settings");
     await pm.logout();
     await assert.assertLogout(page);
+
   });
   test("Login with incorrect password @regression @smoke", async ({
     page,
@@ -66,5 +70,6 @@ test.describe("Login suite", () => {
     await pm.login(fakeEmail, loginData.password);
 
     await expect(page.getByText("email or password is invalid")).toBeVisible();
+
   });
 });

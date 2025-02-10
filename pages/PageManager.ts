@@ -4,7 +4,9 @@ import { LoginPage } from "./LoginPage";
 import { MainPage } from "./MainPage";
 import { ArticleEditorPage } from "./ArticleEditorPage";
 import { SettingsPage } from "./SettingsPage";
+
 import { ArticlePage } from "./ArticlePage";
+
 
 export class PageManager {
   private readonly page: Page;
@@ -13,7 +15,9 @@ export class PageManager {
   private readonly mainPage: MainPage;
   private readonly articleEditorPage: ArticleEditorPage;
   private readonly settingsPage: SettingsPage;
+
   private readonly articlePage: ArticlePage;
+
 
   constructor(page: Page) {
     this.page = page;
@@ -23,6 +27,7 @@ export class PageManager {
     this.articleEditorPage = new ArticleEditorPage(this.page);
     this.settingsPage = new SettingsPage(this.page); 
     this.articlePage = new ArticlePage(this.page); 
+
   }
 
   register(username: string, email: string, password: string) {
@@ -56,5 +61,4 @@ export class PageManager {
   async deleteArticle() {
     await this.page.getByRole("button", { name: "Delete Article" }).nth(1).click();
   }
-
 }

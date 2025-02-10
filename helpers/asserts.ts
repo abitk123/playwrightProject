@@ -48,6 +48,7 @@ export class Assert {
     await expect(page.getByRole("link", { name: "Sign up" })).toBeVisible();
   }
 
+
   async assertArticleDeleteMainPage(page: Page, articleTitle: string) {
     await expect(
       page.locator("app-article-list", { hasText: articleTitle })
@@ -57,4 +58,5 @@ export class Assert {
   async assertArticleCreationMainPage(page: Page, articleTitle: string) {
     await expect(page.locator("app-article-list")).toContainText(articleTitle);
   }
+
 }
