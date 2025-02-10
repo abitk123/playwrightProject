@@ -23,8 +23,10 @@ export class PageManager {
     this.page = page;
     this.registrationPage = new RegistrationPage(this.page);
     this.loginPage = new LoginPage(this.page);
-    this.mainPage = new MainPage(this.page); 
+    this.mainPage = new MainPage(this.page);
     this.articleEditorPage = new ArticleEditorPage(this.page);
+    this.settingsPage = new SettingsPage(this.page);
+    this.articlePage = new ArticlePage(this.page);
     this.settingsPage = new SettingsPage(this.page); 
     this.articlePage = new ArticlePage(this.page); 
 
@@ -54,11 +56,16 @@ export class PageManager {
     await this.settingsPage.logout();
   }
 
-  async createArticle(title: string, about: string, article: string, tag: string) {
+  async createArticle(
+    title: string,
+    about: string,
+    article: string,
+    tag: string
+  ) {
     await this.articleEditorPage.createArticle(title, about, article, tag);
   }
 
   async deleteArticle() {
-    await this.page.getByRole("button", { name: "Delete Article" }).nth(1).click();
+    await this.articlePage.deleteArticle();
   }
 }

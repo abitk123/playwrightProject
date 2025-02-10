@@ -20,11 +20,9 @@ test.describe("Login suite", () => {
   }) => {
     await pm.gotoPage("Sign in");
     await pm.login(loginData.email, loginData.password);
-
     await expect(
       page.getByRole("link", { name: loginData.username })
     ).toBeVisible();
-
 
     await pm.gotoPage("Settings");
     await pm.logout();

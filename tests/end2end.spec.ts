@@ -14,7 +14,7 @@ test.describe("Login suite", () => {
     pm = new PageManager(page);
   });
 
-  test.only("Create user, create article and delete article and logout @regression @smoke @regression", async ({
+  test("Create user, create article and delete article and logout @regression @smoke", async ({
     page,
   }) => {
     const articleTitle = faker.lorem.words(3);
@@ -25,11 +25,9 @@ test.describe("Login suite", () => {
       `${randomUsername}@gmail.com`,
       "Password123"
     );
-
     await expect(
       page.getByRole("link", { name: randomUsername })
     ).toBeVisible();
-
     await pm.gotoPage("New Article");
     await pm.createArticle(
       articleTitle,
@@ -42,7 +40,7 @@ test.describe("Login suite", () => {
 
     await pm.gotoPage("Home");
     await assert.assertArticleCreationMainPage(page, articleTitle);
-    await page.locator("app-article-list", { hasText: articleTitle }).click();
+    await page.locator('app-article-list app-article-preview a.preview-link').first().click();
     await pm.deleteArticle();
 
     await pm.gotoPage("Home");
