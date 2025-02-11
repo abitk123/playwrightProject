@@ -1,11 +1,17 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> d0300bc (2131)
 import { expect, Page } from "@playwright/test";
 
 export class SettingsPage {
   constructor(private page: Page) {}
 
   async logout() {
+<<<<<<< HEAD
 
+=======
+>>>>>>> d0300bc (2131)
     await this.page
       .getByRole("button", { name: "Or click here to logout." })
       .click();
@@ -28,8 +34,11 @@ export class SettingsPage {
 
     await expect(this.page.getByText(username)).toBeVisible();
   }
+<<<<<<< HEAD
 
     await this.page.getByRole('button', { name: 'Or click here to logout.' }).click();
   }
 
+=======
+>>>>>>> d0300bc (2131)
 }
