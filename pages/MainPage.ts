@@ -7,4 +7,8 @@ export class MainPage {
     await this.page.getByRole("link", { name: `${locator}` }).click()
   }
 
+  async goToCreatedArticle(articleTitle: string) {
+    await this.page.locator(`xpath=//a[@class="preview-link" and h1[text()="${articleTitle}"]]`).click();
+  }
+
 }

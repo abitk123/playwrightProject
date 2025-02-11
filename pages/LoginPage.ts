@@ -12,7 +12,4 @@ export class LoginPage {
   async gotoRegistrationPage(): Promise<void> {
     await this.page.getByText("Need an account?").click();
   }
-  
-  
-
 }

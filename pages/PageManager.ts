@@ -15,7 +15,6 @@ export class PageManager {
   private readonly mainPage: MainPage;
   private readonly articleEditorPage: ArticleEditorPage;
   private readonly settingsPage: SettingsPage;
-
   private readonly articlePage: ArticlePage;
 
 
@@ -27,21 +26,21 @@ export class PageManager {
     this.articleEditorPage = new ArticleEditorPage(this.page);
     this.settingsPage = new SettingsPage(this.page);
     this.articlePage = new ArticlePage(this.page);
-    this.settingsPage = new SettingsPage(this.page); 
-    this.articlePage = new ArticlePage(this.page); 
 
   }
 
-  register(username: string, email: string, password: string) {
+  async gotoPage(locator: string) {
+    return this.mainPage.gotoPage(locator);
+  }
+
+  async register(username: string, email: string, password: string) {
+    await this.gotoPage("Sign up");
     return this.registrationPage.register(username, email, password);
   }
 
-  login(email: string, password: string) {
+  async login(email: string, password: string) {
+    await this.gotoPage("Sign in");
     return this.loginPage.login(email, password);
-  }
-
-  gotoPage(locator: string) {
-    return this.mainPage.gotoPage(locator);
   }
 
   async gotoRegistrationPage() {
@@ -53,6 +52,8 @@ export class PageManager {
   }
 
   async logout() {
+
+    await this.gotoPage("Settings");
     await this.settingsPage.logout();
   }
 
@@ -68,4 +69,20 @@ export class PageManager {
   async deleteArticle() {
     await this.articlePage.deleteArticle();
   }
+
+
+  async goToCreatedArticle(articleTitle: string) {
+    await this.mainPage.goToCreatedArticle(articleTitle);
+  }
+
+  async updateUserData(
+    username: string,
+    password: string,
+    email: string,
+    bio?: string
+  ) {
+    await this.gotoPage("Settings");
+    await this.settingsPage.updateUserData(username, password, email, bio);
+  }
+
 }

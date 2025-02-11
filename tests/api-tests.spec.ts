@@ -1,5 +1,5 @@
 import { expect, request, APIRequestContext } from "@playwright/test";
-import { generateRandomUsername } from "../helpers/randomizer";
+import { generateRandomUser } from "../helpers/randomizer";
 import { test } from "../test-fixtures";
 import { Assert } from "../helpers/asserts";
 
@@ -13,20 +13,19 @@ test.describe("API suite @smoke @regression", () => {
   let url = process.env.URL_API || "/";
   let apiClient: ApiClient;
   let assert = new Assert();
-  let randomUsername: string;
+  const randomUser = generateRandomUser();
 
   test.beforeAll(async () => {
     apiContext = await request.newContext();
     apiClient = new ApiClient(apiContext, url);
-    randomUsername = generateRandomUsername("UsernameTest");
   });
 
   test("Create user - success", async () => {
     const requestBody = {
       user: {
-        email: `${randomUsername}@mail.com`,
+        email: randomUser.email,
         password: "pass123!",
-        username: randomUsername,
+        username: randomUser.username,
       },
     };
 
@@ -35,16 +34,16 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password,
       requestBody.user.username
     );
-    await assert.assertSuccessfulUserCreation(response, randomUsername);
+    await assert.assertSuccessfulUserCreation(response, randomUser.username);
   });
 
   test("Create user - empty password @smoke @regression", async () => {
     
     const requestBody = {
       user: {
-        email: `${randomUsername}@mail.com`,
+        email: randomUser.email,
         password: "",
-        username: randomUsername,
+        username: randomUser.username,
       },
     };
 
@@ -60,9 +59,9 @@ test.describe("API suite @smoke @regression", () => {
   test("Create user - empty name @regression", async () => {
     const requestBody = {
       user: {
-        email: `${randomUsername}@mail.com`,
+        email: randomUser.email,
         password: "pass123",
-        username: "",
+        username: '',
       },
     };
 
@@ -78,8 +77,8 @@ test.describe("API suite @smoke @regression", () => {
     const requestBody = {
       user: {
         email: ``,
-        password: "pass123",
-        username: randomUsername,
+        password: randomUser.password,
+        username: randomUser.username,
       },
     };
 
@@ -124,8 +123,10 @@ test.describe("API suite @smoke @regression", () => {
   test("Login - unregistered user @regression @smoke", async ({ loginData }) => {
     const requestBody = {
       user: {
-        email: `${randomUsername}@mail.com`,
-        password: "pass123!"
+
+        email: randomUser.email,
+        password: randomUser.password,
+
       },
     };
 
