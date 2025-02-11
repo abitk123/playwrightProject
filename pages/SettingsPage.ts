@@ -1,8 +1,5 @@
 
 import { expect, Page } from "@playwright/test";
-import exp from "constants";
-import { Page } from "@playwright/test";
-
 
 export class SettingsPage {
   constructor(private page: Page) {}
