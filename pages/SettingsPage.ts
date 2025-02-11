@@ -1,10 +1,14 @@
+
 import { expect, Page } from "@playwright/test";
 import exp from "constants";
+import { Page } from "@playwright/test";
+
 
 export class SettingsPage {
   constructor(private page: Page) {}
 
   async logout() {
+
     await this.page
       .getByRole("button", { name: "Or click here to logout." })
       .click();
@@ -27,4 +31,8 @@ export class SettingsPage {
 
     await expect(this.page.getByText(username)).toBeVisible();
   }
+
+    await this.page.getByRole('button', { name: 'Or click here to logout.' }).click();
+  }
+
 }

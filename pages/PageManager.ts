@@ -4,7 +4,9 @@ import { LoginPage } from "./LoginPage";
 import { MainPage } from "./MainPage";
 import { ArticleEditorPage } from "./ArticleEditorPage";
 import { SettingsPage } from "./SettingsPage";
+
 import { ArticlePage } from "./ArticlePage";
+
 
 export class PageManager {
   private readonly page: Page;
@@ -15,6 +17,7 @@ export class PageManager {
   private readonly settingsPage: SettingsPage;
   private readonly articlePage: ArticlePage;
 
+
   constructor(page: Page) {
     this.page = page;
     this.registrationPage = new RegistrationPage(this.page);
@@ -23,6 +26,7 @@ export class PageManager {
     this.articleEditorPage = new ArticleEditorPage(this.page);
     this.settingsPage = new SettingsPage(this.page);
     this.articlePage = new ArticlePage(this.page);
+
   }
 
   async gotoPage(locator: string) {
@@ -48,6 +52,7 @@ export class PageManager {
   }
 
   async logout() {
+
     await this.gotoPage("Settings");
     await this.settingsPage.logout();
   }
@@ -65,6 +70,7 @@ export class PageManager {
     await this.articlePage.deleteArticle();
   }
 
+
   async goToCreatedArticle(articleTitle: string) {
     await this.mainPage.goToCreatedArticle(articleTitle);
   }
@@ -78,4 +84,5 @@ export class PageManager {
     await this.gotoPage("Settings");
     await this.settingsPage.updateUserData(username, password, email, bio);
   }
+
 }

@@ -123,8 +123,10 @@ test.describe("API suite @smoke @regression", () => {
   test("Login - unregistered user @regression @smoke", async ({ loginData }) => {
     const requestBody = {
       user: {
+
         email: randomUser.email,
         password: randomUser.password,
+
       },
     };
 

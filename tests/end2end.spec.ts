@@ -4,7 +4,9 @@ import { test } from "../test-fixtures";
 import article from "../data/article.json";
 import { Assert } from "../helpers/asserts";
 import { faker } from "@faker-js/faker";
+
 import { generateRandomUser } from "../helpers/randomizer";
+
 
 test.describe("Login suite", () => {
   let pm: PageManager;
@@ -13,6 +15,7 @@ test.describe("Login suite", () => {
     await page.goto(process.env.URL || "/");
     pm = new PageManager(page);
   });
+
 
   test("Create user, create article and delete article @regression", async ({
     page,
@@ -37,12 +40,15 @@ test.describe("Login suite", () => {
 
     await pm.gotoPage("Home");
     await assert.assertArticleCreationMainPage(page, articleTitle);
+
     await pm.goToCreatedArticle(articleTitle);
+
     await pm.deleteArticle();
 
     await pm.gotoPage("Home");
     await assert.assertArticleDeleteMainPage(page, articleTitle);
   });
+
 
   test("Create user, change creds, and login with new data @regression", async ({
     page,
@@ -68,4 +74,5 @@ test.describe("Login suite", () => {
     await pm.login(newData.email, newData.password);
     await assert.assertUILogin(page, newData.username);
   });
+
 });

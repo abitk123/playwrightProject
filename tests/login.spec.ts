@@ -1,8 +1,10 @@
 import { expect } from "@playwright/test";
 import { PageManager } from "../pages/PageManager";
 import { test } from "../test-fixtures";
+
 import { Assert } from "../helpers/asserts";
 import { faker } from "@faker-js/faker";
+
 
 
 test.describe("Login suite", () => {
@@ -12,6 +14,7 @@ test.describe("Login suite", () => {
     await page.goto(process.env.URL || "/");
     pm = new PageManager(page);
   });
+
 
   test("Successful login and logout @regression @smoke", async ({
     page,
