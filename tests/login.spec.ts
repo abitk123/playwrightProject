@@ -5,8 +5,6 @@ import { test } from "../test-fixtures";
 import { Assert } from "../helpers/asserts";
 import { faker } from "@faker-js/faker";
 
-
-
 test.describe("Login suite", () => {
   let pm: PageManager;
   let assert = new Assert();
@@ -14,7 +12,6 @@ test.describe("Login suite", () => {
     await page.goto(process.env.URL || "/");
     pm = new PageManager(page);
   });
-
 
   test("Successful login and logout @regression @smoke", async ({
     page,
@@ -28,7 +25,6 @@ test.describe("Login suite", () => {
     await pm.gotoPage("Settings");
     await pm.logout();
     await assert.assertLogout(page);
-
   });
 
   test("Login through the registration page and logout @regression", async ({
@@ -45,7 +41,6 @@ test.describe("Login suite", () => {
     await pm.gotoPage("Settings");
     await pm.logout();
     await assert.assertLogout(page);
-
   });
   test("Login with incorrect password @regression @smoke", async ({
     page,
@@ -69,6 +64,5 @@ test.describe("Login suite", () => {
     await pm.login(fakeEmail, loginData.password);
 
     await expect(page.getByText("email or password is invalid")).toBeVisible();
-
   });
 });
