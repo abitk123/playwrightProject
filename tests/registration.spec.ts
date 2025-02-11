@@ -1,85 +1,77 @@
 import { expect } from "@playwright/test";
-import { generateRandomUsername } from "../helpers/randomizer";
+import { generateRandomUser } from "../helpers/randomizer";
 import { PageManager } from "../pages/PageManager";
 import { test } from "../test-fixtures";
 
 test.describe("Registration suite", () => {
   let pm: PageManager;
   test.beforeEach(async ({ page }) => {
-    await page.goto(process.env.URL || '/'); 
+    await page.goto(process.env.URL || "/");
     pm = new PageManager(page);
   });
 
   test("Successful registration @regression @smoke", async ({ page }) => {
-    const randomUsername = generateRandomUsername("UsernameTest");
+    const randomUser = generateRandomUser("UsernameTest");
 
-    await pm.gotoPage("Sign up");
     await pm.register(
-      randomUsername,
-      `${randomUsername}@gmail.com`,
-      "Password123"
+      randomUser.username,
+      randomUser.email,
+      randomUser.password
     );
 
     await expect(
-      page.getByRole("link", { name: randomUsername })
+      page.getByRole("link", { name: randomUser.username })
     ).toBeVisible();
   });
 
-  test("Successful registration throw login page @regression", async ({ page }) => {
-    const randomUsername = generateRandomUsername("UsernameTest");
-
+  test("Successful registration throw login page @regression", async ({
+    page,
+  }) => {
+    
     await pm.gotoPage("Sign in");
     await pm.gotoRegistrationPage();
+    const randomUser = generateRandomUser("UsernameTest");
+
     await pm.register(
-      randomUsername,
-      `${randomUsername}@gmail.com`,
-      "Password123"
+      randomUser.username,
+      randomUser.email,
+      randomUser.password
     );
-
     await expect(
-      page.getByRole("link", { name: randomUsername })
-    ).toBeVisible();
-  });
- 
-
-  test("Try to register client with empty username @regression", async ({ page }) => {
-    const randomUsername = generateRandomUsername("UsernameTest");
-
-    await pm.gotoPage("Sign up");
-    await pm.register(
-      " ",
-      `${randomUsername}@gmail.com`,
-      "Password123"
-    );
-
-    await expect(
-      page.getByText("username can't be blank")
+      page.getByRole("link", { name: randomUser.username })
     ).toBeVisible();
   });
 
-  test("Try to register client with empty email @regression", async ({ page }) => {
-    const randomUsername = generateRandomUsername("UsernameTest");
+  test("Try to register client with empty username @regression", async ({
+    page,
+  }) => {
+    const randomUser = generateRandomUser("UsernameTest");
 
-    await pm.gotoPage("Sign up");
-    await pm.register(
-      randomUsername,
-      " ",
-      "Password123"
-    );
+    await pm.register(" ", randomUser.email, randomUser.password);
 
-    await expect(
-      page.getByText("email can't be blank")
-    ).toBeVisible();
+    await expect(page.getByText("username can't be blank")).toBeVisible();
   });
 
-  test("Try to register client with taken username @regression", async ({ page, loginData }) => {
-    const randomUsername = generateRandomUsername("UsernameTest");
+  test("Try to register client with empty email @regression", async ({
+    page,
+  }) => {
+    const randomUser = generateRandomUser("UsernameTest");
 
-    await pm.gotoPage("Sign up");
+    await pm.register(randomUser.username, " ", randomUser.password);
+
+    await expect(page.getByText("email can't be blank")).toBeVisible();
+  });
+
+  test("Try to register client with taken username @regression", async ({
+    page,
+    loginData,
+  }) => {
+    const randomUser = generateRandomUser("UsernameTest");
+
     await pm.register(
       loginData.username,
-      `${randomUsername}@gmail.com`,
-      "Password123"
+      randomUser.email,
+      randomUser.password
     );
 
     await expect(
@@ -87,20 +79,14 @@ test.describe("Registration suite", () => {
     ).toBeVisible();
   });
 
-  test("Try to register client with taken email @regression", async ({ page, loginData }) => {
-    const randomUsername = generateRandomUsername("UsernameTest");
+  test("Try to register client with taken email @regression", async ({
+    page,
+    loginData,
+  }) => {
+    const randomUser = generateRandomUser("UsernameTest");
 
-    await pm.gotoPage("Sign up");
-    await pm.register(
-      randomUsername,
-      loginData.email,
-      "Password123"
-    );
+    await pm.register(randomUser.username, loginData.email, "Password123");
 
-    await expect(
-      page.getByText("email has already been taken")
-    ).toBeVisible();
+    await expect(page.getByText("email has already been taken")).toBeVisible();
   });
-
-
 });

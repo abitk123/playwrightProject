@@ -1,7 +1,6 @@
 import { expect } from "@playwright/test";
 import { PageManager } from "../pages/PageManager";
 import { test } from "../test-fixtures";
-import article from "../data/article.json";
 import { Assert } from "../helpers/asserts";
 import { faker } from "@faker-js/faker";
 
@@ -13,12 +12,10 @@ test.describe("Login suite", () => {
     pm = new PageManager(page);
   });
 
-
   test("Successful login and logout @regression @smoke", async ({
     page,
     loginData,
   }) => {
-    await pm.gotoPage("Sign in");
     await pm.login(loginData.email, loginData.password);
     await expect(
       page.getByRole("link", { name: loginData.username })
