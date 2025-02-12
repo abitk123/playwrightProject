@@ -36,6 +36,10 @@ jobs:
       if: github.event_name == 'pull_request'
       run: npm run test:all
 
+    - name: Run api tests
+      if: github.event_name == 'pull_request'
+      run: npm run test:api
+
     - name: Generate Allure report
       run: npx allure generate allure-results --clean
 

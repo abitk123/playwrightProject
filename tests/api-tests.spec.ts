@@ -6,7 +6,7 @@ import { generateArticle } from "../helpers/articleFactory";
 
 import { ApiClient } from "../helpers/apiClient";
 
-test.describe.serial("API suite", () => {
+test.describe.serial("API suite @api", () => {
   let apiContext: APIRequestContext;
   let url = process.env.URL_API || "/";
   let apiClient: ApiClient;
@@ -36,7 +36,7 @@ test.describe.serial("API suite", () => {
     await assert.assertSuccessfulUserCreation(response, randomUser.username);
   });
 
-  test("Create user - empty password @smoke @regression", async () => {
+  test("Create user - empty password", async () => {
     const requestBody = {
       user: {
         email: randomUser.email,
@@ -57,7 +57,7 @@ test.describe.serial("API suite", () => {
     );
   });
 
-  test("Create user - empty name @regression", async () => {
+  test("Create user - empty name", async () => {
     const requestBody = {
       user: {
         email: randomUser.email,
@@ -78,7 +78,7 @@ test.describe.serial("API suite", () => {
     );
   });
 
-  test("Create user - empty email @regression", async () => {
+  test("Create user - empty email", async () => {
     const requestBody = {
       user: {
         email: ``,
@@ -99,7 +99,7 @@ test.describe.serial("API suite", () => {
     );
   });
 
-  test("Login - success @smoke @regression @smoke", async ({ loginData }) => {
+  test("Login - success", async ({ loginData }) => {
     const requestBody = {
       user: {
         email: loginData.email,
@@ -118,7 +118,7 @@ test.describe.serial("API suite", () => {
     );
   });
 
-  test("Login - invalid password @regression", async ({ loginData }) => {
+  test("Login - invalid password", async ({ loginData }) => {
     const requestBody = {
       user: {
         email: loginData.email,
@@ -137,7 +137,7 @@ test.describe.serial("API suite", () => {
     );
   });
 
-  test("Login - unregistered user @regression @smoke", async ({}) => {
+  test("Login - unregistered user", async ({}) => {
     const requestBody = {
       user: {
         email: randomUser.email,
@@ -156,7 +156,7 @@ test.describe.serial("API suite", () => {
     );
   });
 
-  test("Article - create @regression @smoke", async ({}) => {
+  test("Article - create", async ({}) => {
     const requestBody = {
       article: {
         title: article.title,
