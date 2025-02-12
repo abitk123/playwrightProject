@@ -79,7 +79,7 @@ test.describe("Registration suite", () => {
     ).toBeVisible();
   });
 
-  test("Try to register client with taken email @regression", async ({
+  test("Try to register client with taken email @regression  @smoke", async ({
     page,
     loginData,
   }) => {

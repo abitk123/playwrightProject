@@ -31,7 +31,7 @@ jobs:
       run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @api --reporter=allure-playwright
 
     - name: Generate Allure Report using Allure Docker image
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report frankescobar/allure-docker-service sh -c "allure generate /app/allure-results -o /app/allure-report --clean"
+      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report frankescobar/allure-docker-service sh -c "allure generate ${{ github.workspace }}/allure-report/ -o ${{ github.workspace }}/allure-report/ --clean"
     
     
     - name: Upload Allure Report as an Artifact
