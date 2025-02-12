@@ -21,19 +21,20 @@ jobs:
 
     - name: Run Smoke Tests
       if: github.event_name == 'push'
-      run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @smoke --reporter=html
-    
+      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @smoke --reporter=allure-playwright
+
     - name: Run Regression Tests
       if: github.event_name == 'pull_request'
-      run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @regression --reporter=html
-    
-    - name: Run API Tests
-      run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @api --reporter=html
-    
+      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @regression --reporter=allure-playwright
 
-    
-    - name: Upload Playwright Report as an Artifact
+    - name: Run API Tests
+      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @api --reporter=allure-playwright
+
+    - name: Generate Allure Report
+      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report allure/allure:latest generate /app/allure-results -o /app/allure-report --clean
+
+    - name: Upload Allure Report as an Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: playwright-report
-        path: playwright-report/
+        name: allure-report
+        path: allure-report/
