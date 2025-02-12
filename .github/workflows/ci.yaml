@@ -21,15 +21,27 @@ jobs:
 
     - name: Run Smoke Tests
       if: github.event_name == 'push'
-      run: docker run --rm -v ${{ github.workspace }}/playwright-results:/app/playwright-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @smoke --reporter=html
-    
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}:/app \
+          -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
+          -w /app andreybitkov/playwright-tests:latest \
+          sh -c "npx playwright test --grep @smoke --reporter=html"
+
     - name: Run Regression Tests
       if: github.event_name == 'pull_request'
-      run: docker run --rm -v ${{ github.workspace }}/playwright-results:/app/playwright-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @regression  --reporter=html
-    
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}:/app \
+          -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
+          -w /app andreybitkov/playwright-tests:latest \
+          sh -c "npx playwright test --grep @regression --reporter=html"
+
+    - name: Debug Playwright Report Files
+      run: ls -la ${{ github.workspace }}/playwright-report
 
     - name: Upload Playwright Report as an Artifact
       uses: actions/upload-artifact@v4
       with:
         name: playwright-report
-        path: playwright-report/
+        path: playwright-report/**
