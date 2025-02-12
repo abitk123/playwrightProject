@@ -19,6 +19,27 @@ jobs:
       - name: Pull Playwright Docker image
         run: docker pull andreybitkov/playwright-tests:latest
 
+      - name: Debug Container Files
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app andreybitkov/playwright-tests:latest \
+            ls -la /app
+
+      - name: Check Playwright Installation
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app andreybitkov/playwright-tests:latest \
+            sh -c "npx playwright --version"
+
+      - name: Install Playwright Dependencies
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app andreybitkov/playwright-tests:latest \
+            sh -c "npm install && npx playwright install --with-deps"
+
       - name: Run Smoke Tests
         if: github.event_name == 'push'
         run: |
@@ -37,6 +58,8 @@ jobs:
             -w /app andreybitkov/playwright-tests:latest \
             sh -c "npx playwright test --grep @regression --reporter=html"
 
+      - name: Debug Playwright Report Files
+        run: ls -la ${{ github.workspace }}/playwright-report
 
       - name: Upload Playwright Report as an Artifact
         uses: actions/upload-artifact@v4
