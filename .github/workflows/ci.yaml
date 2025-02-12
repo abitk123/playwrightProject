@@ -28,11 +28,10 @@ jobs:
       run: docker run --rm -v ${{ github.workspace }}:/app -v /app/node_modules -w /app andreybitkov/playwright-tests:latest --grep @regression
 
     - name: Run API Tests
-      if: github.event_name == 'pull_request'
       run: docker run --rm -v ${{ github.workspace }}:/app -v /app/node_modules -w /app andreybitkov/playwright-tests:latest --grep @api
 
     - name: Generate Allure Report
-      run: docker run --rm -v ${{ github.workspace }}:/app -v /app/node_modules -w /app andreybitkov/playwright-tests:latest npx allure generate allure-results --clean
+      run: docker run --rm -v ${{ github.workspace }}:/app -v /app/node_modules -w /app andreybitkov/playwright-tests:latest npx allure generate allure-results -o allure-report --clean
 
     - name: Upload Allure Report as an Artifact
       uses: actions/upload-artifact@v4
