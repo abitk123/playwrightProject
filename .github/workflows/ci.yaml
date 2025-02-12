@@ -21,23 +21,51 @@ jobs:
 
     - name: Run Smoke Tests
       if: github.event_name == 'push'
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @smoke --reporter=allure-playwright
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}/allure-results:/app/allure-results \
+          -w /app andreybitkov/playwright-tests:latest \
+          npx playwright test --grep @smoke --reporter=allure-playwright
 
     - name: Run Regression Tests
       if: github.event_name == 'pull_request'
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @regression --reporter=allure-playwright
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}/allure-results:/app/allure-results \
+          -w /app andreybitkov/playwright-tests:latest \
+          npx playwright test --grep @regression --reporter=allure-playwright
 
     - name: Run API Tests
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -w /app andreybitkov/playwright-tests:latest npx playwright test --grep @api --reporter=allure-playwright
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}/allure-results:/app/allure-results \
+          -w /app andreybitkov/playwright-tests:latest \
+          npx playwright test --grep @api --reporter=allure-playwright
+
+    - name: Debug Allure Results (до генерации)
+      run: ls -la ${{ github.workspace }}/allure-results
 
     - name: Generate Allure Report
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report frankescobar/allure-docker-service sh -c "allure generate /app/allure-results -o /app/allure-report --clean"
-    
-    
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}/allure-results:/app/allure-results \
+          -v ${{ github.workspace }}/allure-report:/app/allure-report \
+          frankescobar/allure-docker-service sh -c "allure generate /app/allure-results -o /app/allure-report --clean"
+
+    - name: Debug Allure Report (после генерации)
+      run: ls -la ${{ github.workspace }}/allure-report
+
+    - name: Copy Allure Report to Host
+      run: |
+        container_id=$(docker create \
+          -v ${{ github.workspace }}/allure-results:/app/allure-results \
+          frankescobar/allure-docker-service \
+          sh -c "allure generate /app/allure-results -o /app/allure-report --clean")
+        docker cp $container_id:/app/allure-report ${{ github.workspace }}/allure-report
+        docker rm $container_id
+
     - name: Upload Allure Report as an Artifact
       uses: actions/upload-artifact@v4
       with:
         name: allure-report
-        path: ${{ github.workspace }}/allure-report/
-    
-    
+        path: allure-report/**
