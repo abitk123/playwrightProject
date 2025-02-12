@@ -23,33 +23,23 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}/allure-results:/app/allure-results \
-            -v ${{ github.workspace }}/allure-report:/app/allure-report \
+            -v ${{ github.workspace }}:/app \
+            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
             -w /app andreybitkov/playwright-tests:latest \
-            sh -c "npx playwright test --grep @smoke --reporter=allure-playwright && allure generate /app/allure-results"
+            sh -c "npx playwright test --grep @smoke --reporter=html"
 
       - name: Run Regression Tests
         if: github.event_name == 'pull_request'
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}/allure-results:/app/allure-results \
-            -v ${{ github.workspace }}/allure-report:/app/allure-report \
+            -v ${{ github.workspace }}:/app \
+            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
             -w /app andreybitkov/playwright-tests:latest \
-            sh -c "npx playwright test --grep @regression --reporter=allure-playwright && allure generate /app/allure-results"
+            sh -c "npx playwright test --grep @regression --reporter=html"
 
-      - name: Run API Tests
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}/allure-results:/app/allure-results \
-            -v ${{ github.workspace }}/allure-report:/app/allure-report \
-            -w /app andreybitkov/playwright-tests:latest \
-            sh -c "npx playwright test --grep @api --reporter=allure-playwright && allure generate /app/allure-results"
 
-      - name: Debug Allure Report Files
-        run: ls -la ${{ github.workspace }}/allure-report
-
-      - name: Upload Allure Report as an Artifact
+      - name: Upload Playwright Report as an Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: allure-report/**
+          name: playwright-report
+          path: playwright-report/**

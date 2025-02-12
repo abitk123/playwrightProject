@@ -6,7 +6,7 @@ import { generateArticle } from "../helpers/articleFactory";
 
 import { ApiClient } from "../helpers/apiClient";
 
-test.describe.serial("API suite @api", () => {
+test.describe.serial("API suite @api @smoke @regression", () => {
   let apiContext: APIRequestContext;
   let url = process.env.URL_API || "/";
   let apiClient: ApiClient;
