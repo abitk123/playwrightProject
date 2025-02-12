@@ -8,7 +8,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : 3,
-  reporter: [["list"], ["allure-playwright"], ["html"]],
+  reporter: [["list"], ["allure-playwright", { outputFolder: 'allure-results' }], ["html"]],
   use: {
     headless: true,
     trace: "on",
