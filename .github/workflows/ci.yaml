@@ -30,15 +30,9 @@ jobs:
     - name: Run API Tests
       run: docker run --rm -v ${{ github.workspace }}:/app -v /app/node_modules -w /app andreybitkov/playwright-tests:latest --grep @api
 
-    - name: Check Allure Version in CI
-      run: docker run --rm andreybitkov/playwright-tests:latest allure --version
     
-    - name: Generate Allure Report
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report andreybitkov/playwright-tests:latest allure generate /app/allure-results /app/allure-report
-    
-    
-    - name: Upload Allure Report as an Artifact
+    - name: Upload Playwright Report as an Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: allure-report
-        path: allure-report/
+        name: playwright-report
+        path: playwright-report/
