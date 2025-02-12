@@ -32,7 +32,7 @@ test.describe("Login suite", () => {
     loginData,
   }) => {
     await pm.gotoPage("Sign up");
-    await pm.goToLoginPage();
+    await pm.goToLoginPageFromReg();
     await pm.login(loginData.email, loginData.password);
 
     await expect(
@@ -48,7 +48,7 @@ test.describe("Login suite", () => {
   }) => {
     const fakePass = faker.internet.password();
     await pm.gotoPage("Sign up");
-    await pm.goToLoginPage();
+    await pm.goToLoginPageFromReg();
     await pm.login(loginData.email, fakePass);
 
     await expect(page.getByText("email or password is invalid")).toBeVisible();
@@ -60,7 +60,7 @@ test.describe("Login suite", () => {
   }) => {
     const fakeEmail = faker.internet.email();
     await pm.gotoPage("Sign up");
-    await pm.goToLoginPage();
+    await pm.goToLoginPageFromReg();
     await pm.login(fakeEmail, loginData.password);
 
     await expect(page.getByText("email or password is invalid")).toBeVisible();

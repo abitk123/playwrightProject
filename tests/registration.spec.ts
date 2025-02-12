@@ -29,7 +29,7 @@ test.describe("Registration suite", () => {
   }) => {
     
     await pm.gotoPage("Sign in");
-    await pm.gotoRegistrationPage();
+    await pm.gotoRegistrationPageFromLogin();
     const randomUser = generateRandomUser("UsernameTest");
 
     await pm.register(

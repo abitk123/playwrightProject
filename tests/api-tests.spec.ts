@@ -1,17 +1,16 @@
 import { expect, request, APIRequestContext } from "@playwright/test";
 import { generateRandomUser } from "../helpers/randomizer";
 import { test } from "../test-fixtures";
-import { Assert } from "../helpers/asserts";
-
-import dotenv from "dotenv";
-dotenv.config();
+import { Assert } from "../helpers/apiAsserts";
+import { generateArticle } from "../helpers/articleFactory";
 
 import { ApiClient } from "../helpers/apiClient";
 
-test.describe("API suite @smoke @regression", () => {
+test.describe.serial("API suite", () => {
   let apiContext: APIRequestContext;
   let url = process.env.URL_API || "/";
   let apiClient: ApiClient;
+  let article = generateArticle();
   let assert = new Assert();
   const randomUser = generateRandomUser();
 
@@ -38,7 +37,6 @@ test.describe("API suite @smoke @regression", () => {
   });
 
   test("Create user - empty password @smoke @regression", async () => {
-    
     const requestBody = {
       user: {
         email: randomUser.email,
@@ -52,8 +50,11 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password,
       requestBody.user.username
     );
-    await assert.assertUnsuccessfulUserCreation(response, "password", "can't be blank");
-
+    await assert.assertUnsuccessfulUserCreation(
+      response,
+      "password",
+      "can't be blank"
+    );
   });
 
   test("Create user - empty name @regression", async () => {
@@ -61,7 +62,7 @@ test.describe("API suite @smoke @regression", () => {
       user: {
         email: randomUser.email,
         password: "pass123",
-        username: '',
+        username: "",
       },
     };
 
@@ -70,7 +71,11 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password,
       requestBody.user.username
     );
-    await assert.assertUnsuccessfulUserCreation(response, "username", "can't be blank");
+    await assert.assertUnsuccessfulUserCreation(
+      response,
+      "username",
+      "can't be blank"
+    );
   });
 
   test("Create user - empty email @regression", async () => {
@@ -87,7 +92,11 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.password,
       requestBody.user.username
     );
-    await assert.assertUnsuccessfulUserCreation(response, "email", "can't be blank");
+    await assert.assertUnsuccessfulUserCreation(
+      response,
+      "email",
+      "can't be blank"
+    );
   });
 
   test("Login - success @smoke @regression @smoke", async ({ loginData }) => {
@@ -102,7 +111,11 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.email,
       requestBody.user.password
     );
-    await assert.assertSuccessfulLogin(response, loginData.username, loginData.email);
+    await assert.assertSuccessfulLogin(
+      response,
+      loginData.username,
+      loginData.email
+    );
   });
 
   test("Login - invalid password @regression", async ({ loginData }) => {
@@ -117,16 +130,18 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.email,
       requestBody.user.password
     );
-    await assert.assertUnsuccessfulLogin(response, "email or password",  "is invalid");
+    await assert.assertUnsuccessfulLogin(
+      response,
+      "email or password",
+      "is invalid"
+    );
   });
 
-  test("Login - unregistered user @regression @smoke", async ({ loginData }) => {
+  test("Login - unregistered user @regression @smoke", async ({}) => {
     const requestBody = {
       user: {
-
         email: randomUser.email,
         password: randomUser.password,
-
       },
     };
 
@@ -134,6 +149,54 @@ test.describe("API suite @smoke @regression", () => {
       requestBody.user.email,
       requestBody.user.password
     );
-    await assert.assertUnsuccessfulLogin(response, "email or password",  "is invalid");
+    await assert.assertUnsuccessfulLogin(
+      response,
+      "email or password",
+      "is invalid"
+    );
+  });
+
+  test("Article - create @regression @smoke", async ({}) => {
+    const requestBody = {
+      article: {
+        title: article.title,
+        description: article.description,
+        body: article.articleContent,
+        tagList: article.tagList,
+      },
+    };
+
+    let response = await apiClient.createArticle(
+      requestBody.article.title,
+      requestBody.article.description,
+      requestBody.article.body,
+      requestBody.article.tagList
+    );
+
+    await assert.assertSuccessfulArticleCreation(
+      response,
+      article.title,
+      article.description,
+      article.articleContent
+    );
+  });
+
+  test("Create article without token - should fail", async () => {
+    let apiClient = new ApiClient(apiContext, url);
+
+    apiClient["authToken"] = null;
+
+    let response = await apiClient.createArticle(
+      article.title,
+      article.description,
+      article.articleContent,
+      article.tagList
+    );
+
+    let message = await response.json()
+
+    expect(response.status()).toBe(401);
+    expect(message.message).toEqual("missing authorization credentials");
+    
   });
 });

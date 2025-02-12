@@ -43,12 +43,12 @@ export class PageManager {
     return this.loginPage.login(email, password);
   }
 
-  async gotoRegistrationPage() {
-    await this.loginPage.gotoRegistrationPage();
+  async gotoRegistrationPageFromLogin() {
+    await this.loginPage.gotoRegistrationPageFromLogin();
   }
 
-  async goToLoginPage() {
-    await this.registrationPage.goToLoginPage();
+  async goToLoginPageFromReg() {
+    await this.registrationPage.goToLoginPageFromReg();
   }
 
   async logout() {

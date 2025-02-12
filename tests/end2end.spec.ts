@@ -50,7 +50,7 @@ test.describe("Login suite", () => {
   });
 
 
-  test("Create user, change creds, and login with new data @regression", async ({
+  test("Create user, change creds and login with new data @regression", async ({
     page,
   }) => {
     const randomUser = generateRandomUser();

@@ -15,7 +15,7 @@ export class RegistrationPage {
     await this.page.getByRole("button", { name: "Sign up" }).click();
   }
 
-  async goToLoginPage(): Promise<void> {
+  async goToLoginPageFromReg(): Promise<void> {
     await this.page.getByText("Have an account?").click();
   }
 
