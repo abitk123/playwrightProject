@@ -34,7 +34,7 @@ jobs:
       run: docker run --rm andreybitkov/playwright-tests:latest allure --version
     
     - name: Generate Allure Report
-      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report andreybitkov/playwright-tests:latest allure generate /app/allure-results -o /app/allure-report
+      run: docker run --rm -v ${{ github.workspace }}/allure-results:/app/allure-results -v ${{ github.workspace }}/allure-report:/app/allure-report andreybitkov/playwright-tests:latest allure generate /app/allure-results /app/allure-report
     
     - name: Upload Allure Report as an Artifact
       uses: actions/upload-artifact@v4
