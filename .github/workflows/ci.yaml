@@ -24,30 +24,29 @@ jobs:
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            -v ${{ github.workspace }}/allure-report:/app/allure-report \
             -w /app andreybitkov/playwright-tests:latest \
-            npx playwright test --grep @smoke --reporter=allure-playwright
+            sh -c "npx playwright test --grep @smoke --reporter=allure-playwright && allure generate /app/allure-results"
 
       - name: Run Regression Tests
         if: github.event_name == 'pull_request'
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            -v ${{ github.workspace }}/allure-report:/app/allure-report \
             -w /app andreybitkov/playwright-tests:latest \
-            npx playwright test --grep @regression --reporter=allure-playwright
+            sh -c "npx playwright test --grep @regression --reporter=allure-playwright && allure generate /app/allure-results"
 
       - name: Run API Tests
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/allure-results:/app/allure-results \
-            -w /app andreybitkov/playwright-tests:latest \
-            npx playwright test --grep @api --reporter=allure-playwright
-
-      - name: Generate and Copy Allure Report
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}/allure-results:/app/allure-results \
             -v ${{ github.workspace }}/allure-report:/app/allure-report \
-            frankescobar/allure-docker-service sh -c "allure generate /app/allure-results -o /app/allure-report --clean && cp -r /app/allure-report /app/final-report"
+            -w /app andreybitkov/playwright-tests:latest \
+            sh -c "npx playwright test --grep @api --reporter=allure-playwright && allure generate /app/allure-results"
+
+      - name: Debug Allure Report Files
+        run: ls -la ${{ github.workspace }}/allure-report
 
       - name: Upload Allure Report as an Artifact
         uses: actions/upload-artifact@v4
