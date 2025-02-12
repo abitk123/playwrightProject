@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  playwright:
+    build: .
+    container_name: playwright-tests
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["npx", "playwright", "test"]
