@@ -23,14 +23,6 @@ jobs:
       - name: Debug Files in CI/CD
         run: ls -la ${{ github.workspace }}
 
-      # Отладка: Проверяем файлы внутри Docker-контейнера
-      - name: Debug Files Inside Docker
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/app \
-            -w /app andreybitkov/playwright-tests:latest \
-            sh -c "ls -la /app && ls -la /app/node_modules/.bin/ && npx playwright --version || echo 'Playwright is missing!'"
-
       # Запуск Smoke Tests через `npm run test:smoke`
       - name: Run Smoke Tests
         if: github.event_name == 'push'
