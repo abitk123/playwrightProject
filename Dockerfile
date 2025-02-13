@@ -27,4 +27,5 @@ RUN chmod +x /opt/allure/bin/allure
 
 RUN node -v && npm -v && npx playwright --version && allure --version
 
-ENTRYPOINT ["sh", "-c", "npx playwright test && allure generate allure-results -o allure-report --clean"]
+ENTRYPOINT ENTRYPOINT ["npx", "playwright", "test"]
+
