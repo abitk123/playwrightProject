@@ -20,24 +20,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
 
       - name: Run Smoke Tests
         if: github.event_name == 'push'
-        run: npm run test:smoke -- --reporter=allure-playwright
+        run: npm run test:smoke
 
       - name: Run Regression Tests
         if: github.event_name == 'pull_request'
-        run: npm run test:all -- --reporter=allure-playwright
+        run: npm run test:all
 
       - name: Run API Tests
-        run: npm run test:api -- --reporter=allure-playwright
+        run: npm run test:api
 
       - name: Generate Allure Report
         run: npx allure-playwright generate allure-results -o allure-report || echo "Allure report generation failed!"
