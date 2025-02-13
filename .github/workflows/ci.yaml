@@ -18,7 +18,14 @@ jobs:
 
       - name: Pull latest Playwright Docker image
         run: docker pull andreybitkov/playwright-tests:latest
-
+        
+      - name: Check Playwright Installation in CI
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app andreybitkov/playwright-tests:latest \
+            sh -c "npx playwright --version || echo 'Playwright is missing!'"
+      
 
       - name: Run Smoke Tests
         if: github.event_name == 'push'
