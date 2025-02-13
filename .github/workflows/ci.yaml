@@ -19,12 +19,12 @@ jobs:
       - name: Pull latest Playwright Docker image
         run: docker pull andreybitkov/playwright-tests:latest
 
+
       - name: Run Smoke Tests
         if: github.event_name == 'push'
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
-            -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            -v ${{ github.workspace }}:/app \
             -w /app andreybitkov/playwright-tests:latest \
             sh -c "npx playwright test --grep @smoke --reporter=html"
         continue-on-error: true
@@ -33,8 +33,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
-            -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            -v ${{ github.workspace }}:/app \
             -w /app andreybitkov/playwright-tests:latest \
             sh -c "npx playwright test --grep @regression --reporter=html"
         continue-on-error: true
@@ -42,8 +41,7 @@ jobs:
       - name: Run API Tests
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
-            -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            -v ${{ github.workspace }}:/app \
             -w /app andreybitkov/playwright-tests:latest \
             sh -c "npx playwright test --grep @api --reporter=html"
         continue-on-error: true
