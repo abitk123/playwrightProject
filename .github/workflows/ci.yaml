@@ -16,48 +16,38 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Устанавливаем Node.js (версия 20) и кешируем npm-зависимости
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      # Устанавливаем зависимости (npm install)
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      # Устанавливаем Playwright и браузеры
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Устанавливаем Allure CLI локально
       - name: Install Allure CLI
         run: npm install allure-playwright allure-commandline --save-dev
 
-      # Проверяем, что Allure CLI установлен
       - name: Verify Allure Installation
         run: npx allure --version || echo "Allure CLI not found!"
 
-      # Запускаем Smoke Tests (с Allure-репортом)
       - name: Run Smoke Tests
         if: github.event_name == 'push'
-        run: npm run test:smoke -- --reporter=allure-playwright
+        run: npm run test:smoke 
 
-      # Запускаем Regression Tests (с Allure-репортом)
       - name: Run Regression Tests
         if: github.event_name == 'pull_request'
-        run: npm run test:all -- --reporter=allure-playwright
+        run: npm run test:all 
 
-      # Запускаем API Tests (с Allure-репортом)
       - name: Run API Tests
-        run: npm run test:api -- --reporter=allure-playwright
+        run: npm run test:api 
 
-      # Генерируем HTML-репорт Allure
       - name: Generate Allure Report
         run: npx allure generate allure-results -o allure-report --clean || echo "Allure report generation failed!"
 
-      # Загружаем Allure-отчет как артефакт CI/CD
       - name: Upload Allure Report as an Artifact
         uses: actions/upload-artifact@v4
         with:
