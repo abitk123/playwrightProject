@@ -19,9 +19,11 @@ jobs:
       - name: Pull latest Playwright Docker image
         run: docker pull andreybitkov/playwright-tests:latest
 
+      # Отладка: Проверяем файлы перед запуском тестов
       - name: Debug Files in CI/CD
         run: ls -la ${{ github.workspace }}
 
+      # Отладка: Проверяем файлы внутри Docker-контейнера
       - name: Debug Files Inside Docker
         run: |
           docker run --rm \
@@ -29,6 +31,7 @@ jobs:
             -w /app andreybitkov/playwright-tests:latest \
             sh -c "ls -la /app && ls -la /app/node_modules/.bin/ && npx playwright --version || echo 'Playwright is missing!'"
 
+      # Запуск Smoke Tests через `npm run test:smoke`
       - name: Run Smoke Tests
         if: github.event_name == 'push'
         run: |
@@ -36,8 +39,9 @@ jobs:
             --platform linux/amd64 \
             -v ${{ github.workspace }}:/app \
             -w /app andreybitkov/playwright-tests:latest \
-            sh -c "/app/node_modules/.bin/playwright test --grep @smoke --reporter=html"
+            sh -c "npm run test:smoke"
 
+      # Запуск Regression Tests через `npm run test:all`
       - name: Run Regression Tests
         if: github.event_name == 'pull_request'
         run: |
@@ -45,19 +49,22 @@ jobs:
             --platform linux/amd64 \
             -v ${{ github.workspace }}:/app \
             -w /app andreybitkov/playwright-tests:latest \
-            sh -c "/app/node_modules/.bin/playwright test --grep @regression --reporter=html"
+            sh -c "npm run test:all"
 
+      # Запуск API Tests через `npm run test:api`
       - name: Run API Tests
         run: |
           docker run --rm \
             --platform linux/amd64 \
             -v ${{ github.workspace }}:/app \
             -w /app andreybitkov/playwright-tests:latest \
-            sh -c "/app/node_modules/.bin/playwright test --grep @api --reporter=html"
+            sh -c "npm run test:api"
 
+      # Отладка: Проверяем, есть ли HTML-репорт перед загрузкой
       - name: Debug Playwright Report Files
         run: ls -la ${{ github.workspace }}/playwright-report || echo "No report found!"
 
+      # Загружаем HTML-отчет Playwright в артефакты CI/CD
       - name: Upload Playwright Report as an Artifact
         uses: actions/upload-artifact@v4
         with:
