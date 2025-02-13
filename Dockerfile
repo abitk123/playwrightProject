@@ -15,6 +15,11 @@ RUN npx playwright install --with-deps
 
 COPY . .
 
+# 🔍 Проверяем, что файлы скопировались
+RUN ls -la /app
+
+RUN rm -rf /opt/allure /usr/local/bin/allure
+
 RUN curl -o allure-2.23.0.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.23.0/allure-commandline-2.23.0.tgz \
     && tar -zxvf allure-2.23.0.tgz \
     && mv allure-2.23.0 /opt/allure \
@@ -22,10 +27,6 @@ RUN curl -o allure-2.23.0.tgz -L https://repo.maven.apache.org/maven2/io/qameta/
 
 ENV PATH="/opt/allure/bin:$PATH"
 
-# Даем права на выполнение Allure
 RUN chmod +x /opt/allure/bin/allure
 
-RUN node -v && npm -v && npx playwright --version && allure --version
-
-ENTRYPOINT ENTRYPOINT ["npx", "playwright", "test"]
-
+ENTRYPOINT ["npx", "playwright", "test", "--config=playwright.config.ts"]
