@@ -8,7 +8,7 @@ import { faker } from "@faker-js/faker";
 import { generateRandomUser } from "../helpers/randomizer";
 
 
-test.describe("Login suite", () => {
+test.describe("Login suite @regression @smoke", () => {
   let pm: PageManager;
   let assert = new Assert();
   test.beforeEach(async ({ page }) => {
@@ -17,7 +17,7 @@ test.describe("Login suite", () => {
   });
 
 
-  test("Create user, create article and delete article @regression", async ({
+  test("Create user, create article and delete article", async ({
     page,
   }) => {
     const articleTitle = faker.lorem.words(3);
@@ -50,7 +50,7 @@ test.describe("Login suite", () => {
   });
 
 
-  test("Create user, change creds and login with new data @regression", async ({
+  test("Create user, change creds and login with new data", async ({
     page,
   }) => {
     const randomUser = generateRandomUser();
