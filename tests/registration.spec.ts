@@ -3,14 +3,14 @@ import { generateRandomUser } from "../helpers/randomizer";
 import { PageManager } from "../pages/PageManager";
 import { test } from "../test-fixtures";
 
-test.describe("Registration suite", () => {
+test.describe("Registration suite @regression @smoke", () => {
   let pm: PageManager;
   test.beforeEach(async ({ page }) => {
     await page.goto(process.env.URL || "/");
     pm = new PageManager(page);
   });
 
-  test("Successful registration @regression @smoke", async ({ page }) => {
+  test("Successful registration", async ({ page }) => {
     const randomUser = generateRandomUser("UsernameTest");
 
     await pm.register(
@@ -24,7 +24,7 @@ test.describe("Registration suite", () => {
     ).toBeVisible();
   });
 
-  test("Successful registration throw login page @regression", async ({
+  test("Successful registration throw login page", async ({
     page,
   }) => {
     
@@ -42,7 +42,7 @@ test.describe("Registration suite", () => {
     ).toBeVisible();
   });
 
-  test("Try to register client with empty username @regression", async ({
+  test("Try to register client with empty username", async ({
     page,
   }) => {
     const randomUser = generateRandomUser("UsernameTest");
@@ -52,7 +52,7 @@ test.describe("Registration suite", () => {
     await expect(page.getByText("username can't be blank")).toBeVisible();
   });
 
-  test("Try to register client with empty email @regression", async ({
+  test("Try to register client with empty email", async ({
     page,
   }) => {
     const randomUser = generateRandomUser("UsernameTest");
@@ -62,7 +62,7 @@ test.describe("Registration suite", () => {
     await expect(page.getByText("email can't be blank")).toBeVisible();
   });
 
-  test("Try to register client with taken username @regression", async ({
+  test("Try to register client with taken username", async ({
     page,
     loginData,
   }) => {
@@ -79,7 +79,7 @@ test.describe("Registration suite", () => {
     ).toBeVisible();
   });
 
-  test("Try to register client with taken email @regression  @smoke", async ({
+  test("Try to register client with taken email", async ({
     page,
     loginData,
   }) => {

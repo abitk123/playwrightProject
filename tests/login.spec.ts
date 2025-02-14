@@ -5,7 +5,7 @@ import { test } from "../test-fixtures";
 import { Assert } from "../helpers/asserts";
 import { faker } from "@faker-js/faker";
 
-test.describe("Login suite", () => {
+test.describe("Login suite @regression @smoke", () => {
   let pm: PageManager;
   let assert = new Assert();
   test.beforeEach(async ({ page }) => {
@@ -13,7 +13,7 @@ test.describe("Login suite", () => {
     pm = new PageManager(page);
   });
 
-  test("Successful login and logout @regression @smoke", async ({
+  test("Successful login and logout", async ({
     page,
     loginData,
   }) => {
@@ -27,7 +27,7 @@ test.describe("Login suite", () => {
     await assert.assertLogout(page);
   });
 
-  test("Login through the registration page and logout @regression", async ({
+  test("Login through the registration page and logout", async ({
     page,
     loginData,
   }) => {
@@ -42,7 +42,7 @@ test.describe("Login suite", () => {
     await pm.logout();
     await assert.assertLogout(page);
   });
-  test("Login with incorrect password @regression @smoke", async ({
+  test("Login with incorrect password", async ({
     page,
     loginData,
   }) => {
@@ -54,7 +54,7 @@ test.describe("Login suite", () => {
     await expect(page.getByText("email or password is invalid")).toBeVisible();
   });
 
-  test("Login with incorrect email @regression", async ({
+  test("Login with incorrect email", async ({
     page,
     loginData,
   }) => {

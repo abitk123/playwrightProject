@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test:all": "npx playwright test --grep @regression",
-    "test:smoke": "npx playwright test --grep @smoke",
+    "test:smoke": "npx playwright test --grep @smoke --project=chromium",
     "test:api": "npx playwright test api-tests.spec.ts --project=chromium",
     "test:all_debug": "npx playwright test --debug --project=chromium"
   },
