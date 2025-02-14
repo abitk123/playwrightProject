@@ -36,13 +36,11 @@ jobs:
 
       - name: Run Smoke Tests
         if: github.event_name == 'push'
-        run: npm run test:smoke
-          npm run test:api
+        run: npm run test:smoke && npm run test:api
 
       - name: Run Regression Tests
         if: github.event_name == 'pull_request'
-        run: npm run test:all
-          npm run test:api
+        run: npm run test:all && npm run test:api
 
       - name: Generate Allure Report
         run: npx allure generate allure-results -o allure-report --clean || echo "Allure report generation failed!"
