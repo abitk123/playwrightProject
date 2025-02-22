@@ -6,7 +6,8 @@
     "test:all": "npx playwright test --grep @regression",
     "test:smoke": "npx playwright test --grep @smoke --project=chromium",
     "test:api": "npx playwright test api-tests.spec.ts --project=chromium",
-    "test:all_debug": "npx playwright test --debug --project=chromium"
+    "test:all_debug": "npx playwright test --debug --project=chromium",
+    "test:e2e": "npx playwright test --grep @e2e --project=chromium"
   },
   "keywords": [],
   "author": "",
