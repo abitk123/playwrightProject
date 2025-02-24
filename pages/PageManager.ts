@@ -4,9 +4,8 @@ import { LoginPage } from "./LoginPage";
 import { MainPage } from "./MainPage";
 import { ArticleEditorPage } from "./ArticleEditorPage";
 import { SettingsPage } from "./SettingsPage";
-
+import { ProfilePage } from "./ProfilePage";
 import { ArticlePage } from "./ArticlePage";
-
 
 export class PageManager {
   private readonly page: Page;
@@ -16,7 +15,7 @@ export class PageManager {
   private readonly articleEditorPage: ArticleEditorPage;
   private readonly settingsPage: SettingsPage;
   private readonly articlePage: ArticlePage;
-
+  private readonly profilePage: ProfilePage;
 
   constructor(page: Page) {
     this.page = page;
@@ -26,11 +25,15 @@ export class PageManager {
     this.articleEditorPage = new ArticleEditorPage(this.page);
     this.settingsPage = new SettingsPage(this.page);
     this.articlePage = new ArticlePage(this.page);
-
+    this.profilePage = new ProfilePage(this.page);
   }
 
   async gotoPage(locator: string) {
     return this.mainPage.gotoPage(locator);
+  }
+
+  async gotoProfile(locator: string) {
+    return this.mainPage.gotoProfile(locator);
   }
 
   async register(username: string, email: string, password: string) {
@@ -52,7 +55,6 @@ export class PageManager {
   }
 
   async logout() {
-
     await this.gotoPage("Settings");
     await this.settingsPage.logout();
   }
@@ -70,7 +72,6 @@ export class PageManager {
     await this.articlePage.deleteArticle();
   }
 
-
   async goToCreatedArticle(articleTitle: string) {
     await this.mainPage.goToCreatedArticle(articleTitle);
   }
@@ -85,4 +86,15 @@ export class PageManager {
     await this.settingsPage.updateUserData(username, password, email, bio);
   }
 
+  async checkMyPost() {
+    await this.profilePage.checkMyPost();
+  }
+
+  async clickLike(name: string) {
+   return await this.mainPage.clickLike(name);
+  }
+
+  async checkLikeAndDiscard(name: string, likeCount: number){
+    await this.mainPage.checkLikeAndDiscard(name, likeCount);
+  }
 }

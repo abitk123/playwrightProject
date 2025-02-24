@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test:all": "npx playwright test --grep @regression",
-    "test:smoke": "npx playwright test --grep @smoke --project=chromium",
+    "test:all": "npx playwright test --grep '@api|@regression'",
+    "test:smoke": "npx playwright test --grep '@api|@smoke' --project=chromium",
     "test:api": "npx playwright test api-tests.spec.ts --project=chromium",
     "test:all_debug": "npx playwright test --debug --project=chromium",
     "test:e2e": "npx playwright test --grep @e2e --project=chromium"

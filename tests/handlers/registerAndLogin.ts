@@ -10,7 +10,7 @@ export async function registerNewClient(page: Page) {
   const randomUser = generateRandomUser();
 
   await pageManager.register(randomUser.username, randomUser.email, randomUser.password);
-  await assert.assertUILogin(page, randomUser.username);
+  await assert.assertUILogin(page, randomUser.username); //расширить число проверок
 
   return randomUser;
 }
